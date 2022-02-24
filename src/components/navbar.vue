@@ -5,7 +5,7 @@
 				<a class="nav-logo" href="#"><img src="../assets/logo.svg" alt=""></a>
 			</div>
 			<div class="nav-header navbar-btn-menu">
-				<button class="btn btn-menu" @click="showMenu" v-click-outside="showMenu">
+				<button class="btn btn-menu" @click="showMenu">
 				</button>
 			</div>
 			<div class="navbar-header-content">
@@ -94,33 +94,44 @@ import '../clickoutside'
 export default {
 	methods:{
 		showMenu(){
-			let nav_left = document.querySelector(".navbar-left");
-			let nav_right = document.querySelector(".navbar-right");
-			let btn_menu = document.querySelector(".navbar-btn-menu .btn-menu");
-			let nav_content = document.querySelector(".navbar-header-content")
-			if (nav_left.className.indexOf('mobile-active') > -1 && nav_right.className.indexOf('mobile-active') > -1) {
-				nav_content.classList.remove("mobile-menu");
-				nav_left.classList.remove('mobile-active');
-				nav_right.classList.remove('mobile-active');
-				btn_menu.style.backgroundImage = `url(${require('../assets/icon-hamburger.svg')})`;
-			}else{
-				nav_content.classList.add("mobile-menu");
-				nav_left.classList.add('mobile-active');
-				nav_right.classList.add('mobile-active');
-				btn_menu.style.backgroundImage = `url(${require('../assets/icon-close.svg')})`;
+			if(window.screen.availWidth <= 800){
+				let nav_left = document.querySelector(".navbar-left");
+				let nav_right = document.querySelector(".navbar-right");
+				let btn_menu = document.querySelector(".navbar-btn-menu .btn-menu");
+				let nav_content = document.querySelector(".navbar-header-content")
+				if (nav_left.className.indexOf('mobile-active') > -1 && nav_right.className.indexOf('mobile-active') > -1) {
+					nav_content.classList.remove("mobile-menu");
+					nav_left.classList.remove('mobile-active');
+					nav_right.classList.remove('mobile-active');
+					btn_menu.style.backgroundImage = `url(${require('../assets/icon-hamburger.svg')})`;
+				}else{
+					nav_content.classList.add("mobile-menu");
+					nav_left.classList.add('mobile-active');
+					nav_right.classList.add('mobile-active');
+					btn_menu.style.backgroundImage = `url(${require('../assets/icon-close.svg')})`;
+				}
 			}
+			
 		},
 		changeDropdown(ev){
-			let el_base = ev.target;
-			let el_name = ev.target.localName;
-			let dropdowns = document.querySelectorAll(".nav-item.dropdown");
-			if(el_name == "a"){
-				el_base = el_base.parentNode;
+			if(window.screen.availWidth <= 800){
+				let el_base = ev.target;
+				let el_name = ev.target.localName;
+				let dropdowns = document.querySelectorAll(".nav-item.dropdown");
+				if(el_name == "a"){
+					el_base = el_base.parentNode;
+				}
+				if(el_base.className.indexOf('active') == -1){
+					dropdowns.forEach(el=>{
+						el.classList.remove('active');
+					})
+					el_base.classList.add('active');
+				}else{
+					dropdowns.forEach(el=>{
+						el.classList.remove('active');
+					})
+				}
 			}
-			dropdowns.forEach(el=>{
-				el.classList.remove('active');
-			})
-			el_base.classList.add('active');
 		}
 	}
 }
@@ -144,7 +155,6 @@ export default {
     display: grid;
     grid-template-columns: 59.4% 40.6%;
     align-items: center;
-	display: none;
 }
 
 .navbar-header-content.mobile-menu{
