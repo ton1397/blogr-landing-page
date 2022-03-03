@@ -1,7 +1,7 @@
 <template>
 	<div id="blogr-navbar">
 		<div class="navbar-header-container">
-			<div class="navbar-header navbar-logo">
+			<div class="navbar-logo">
 				<a class="nav-logo" href="#"><img src="../assets/logo.svg" alt=""></a>
 			</div>
 			<div class="nav-header navbar-btn-menu">
@@ -9,11 +9,14 @@
 				</button>
 			</div>
 			<div class="navbar-header-content">
-				<div class="navbar-header navbar-left">
+				<div class="navbar-left">
 					<ul>
-						<li class="nav-item dropdown" @click="changeDropdown" v-click-outside="changeDropdown">
-							<a href="#">Product</a>
-							<span class="dropdown-icon"><img src="../assets/icon-arrow-light.svg" alt=""></span>
+						<li class="nav-item dropdown" @click="changeDropdown">
+							<a href="#">
+								Product
+
+							</a>
+							<span class="dropdown-icon"><img src="../assets/icon-arrow-light.svg" alt=""></span>							
 							<div class="dropdown-content">
 								<ul>
 									<li>
@@ -34,8 +37,10 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item dropdown" @click="changeDropdown" v-click-outside="changeDropdown">
-							<a href="#">Company</a>
+						<li class="nav-item dropdown" @click="changeDropdown">
+							<a href="#">
+								Company
+							</a>
 							<span class="dropdown-icon"><img src="../assets/icon-arrow-light.svg" alt=""></span>
 							<div class="dropdown-content">
 								<ul>
@@ -54,8 +59,10 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item dropdown" @click="changeDropdown" v-click-outside="changeDropdown">
-							<a href="#">Connect</a>
+						<li class="nav-item dropdown" @click="changeDropdown">
+							<a href="#">
+								Connect
+							</a>
 							<span class="dropdown-icon"><img src="../assets/icon-arrow-light.svg" alt=""></span>
 							<div class="dropdown-content">
 								<ul>
@@ -73,7 +80,7 @@
 						</li>
 					</ul>
 				</div>
-				<div class="navbar-header navbar-right">
+				<div class="navbar-right">
 					<ul>
 						<li class="nav-item">
 							<a href="#">Login</a>
@@ -95,6 +102,7 @@ export default {
 	methods:{
 		showMenu(){
 			if(window.screen.availWidth <= 800){
+				/*		
 				let nav_left = document.querySelector(".navbar-left");
 				let nav_right = document.querySelector(".navbar-right");
 				let btn_menu = document.querySelector(".navbar-btn-menu .btn-menu");
@@ -110,26 +118,33 @@ export default {
 					nav_right.classList.add('mobile-active');
 					btn_menu.style.backgroundImage = `url(${require('../assets/icon-close.svg')})`;
 				}
+				*/
+				let btn_menu = document.querySelector(".navbar-btn-menu .btn-menu");
+				let nav_content = document.querySelector(".navbar-header-content")
+				if (nav_content.className.indexOf('menu-active') > -1) {
+					nav_content.classList.remove("menu-active");
+					btn_menu.style.backgroundImage = `url(${require('../assets/icon-hamburger.svg')})`;
+				}else{
+					nav_content.classList.add("menu-active");
+					btn_menu.style.backgroundImage = `url(${require('../assets/icon-close.svg')})`;
+				}
 			}
 			
 		},
 		changeDropdown(ev){
+			let dropdowns = document.querySelectorAll(".nav-item.dropdown");
+			dropdowns.forEach(el=>{
+				el.classList.remove('active');
+			})
 			if(window.screen.availWidth <= 800){
 				let el_base = ev.target;
 				let el_name = ev.target.localName;
-				let dropdowns = document.querySelectorAll(".nav-item.dropdown");
+				console.log(dropdowns);
 				if(el_name == "a"){
 					el_base = el_base.parentNode;
 				}
 				if(el_base.className.indexOf('active') == -1){
-					dropdowns.forEach(el=>{
-						el.classList.remove('active');
-					})
 					el_base.classList.add('active');
-				}else{
-					dropdowns.forEach(el=>{
-						el.classList.remove('active');
-					})
 				}
 			}
 		}
@@ -146,7 +161,7 @@ export default {
 .navbar-header-container{
 	padding: 25px;
     display: grid;
-    grid-template-columns: 117PX 90%;
+    grid-template-columns: 100PX 95%;
 	align-items: center;
 }
 
@@ -192,23 +207,8 @@ export default {
 	padding-top: 10px;
 }
 
-.navbar-header-content.mobile-menu li span img{
-    content: url(../assets/icon-arrow-dark.svg);
-}
-
-.navbar-header-content.mobile-menu .btn-light{
-    background: linear-gradient(to right, hsl(13, 100%, 72%), hsl(353, 100%, 62%));
-    border-radius: 50px;
-    padding: 12px 30px !important;
-    margin: 0 15px;
-    color: #fff;
-    border: #fff;
-    font-size: .9em;
-    cursor: pointer;
-}
-
-.navbar-right{
-	text-align: right;
+.navbar-right:not(.menu-active .navbar-right){
+	text-align: end;
 }
 
 .navbar-btn-menu{
@@ -225,7 +225,7 @@ export default {
     padding: 20px;
 }
 
-.navbar-header .nav-item {
+.navbar-header-content .nav-item {
     display: inline;
     padding: 10px;
 	position: relative;
@@ -257,9 +257,11 @@ export default {
 img{
 	vertical-align: middle;
 }
-
-.navbar-header.mobile-active, .navbar-header.mobile-active ul{
-	display: block;
+.navbar-header-content .dropdown:hover .dropdown-content{
+	display: block !important;
+}
+.navbar-header-content .dropdown.active .dropdown-content{
+	display: block !important;
 }
 
 .dropdown-content{
@@ -286,16 +288,86 @@ img{
 	#blogr-navbar {
 		padding: 0;
 	}
+
 	.navbar-btn-menu{
 		display: block;
 	}
-	.navbar-header ul{
-		display: none;
+
+	.navbar-header-content.menu-active{
+		display: block;
+		position: absolute;
+		width: 90vw;
+		top: 70px;
+		transform: translate(-50%);
+		left: 50%;
+		background-color: #fff;
+		border-radius: 5px;
+		z-index: 1;
 	}
+
+	.navbar-header-content.menu-active .navbar-left {
+		padding-bottom: 10px;
+	}
+
+	.navbar-header-content.menu-active .navbar-right {
+		border-top: 1px solid #ccc;
+		padding-top: 25px;
+	}
+
+	.navbar-header-content > div{
+		display: none;
+		text-align: center;
+	}
+
+	.navbar-header-content.menu-active .btn-light{
+		background: linear-gradient(to right, hsl(13, 100%, 72%), hsl(353, 100%, 62%));
+		border-radius: 50px;
+		padding: 12px 30px !important;
+		margin: 0 15px;
+		color: #fff;
+		border: #fff;
+		font-size: .9em;
+		cursor: pointer;
+	}
+
+	.navbar-header-content.menu-active .nav-item a:not(.btn-light){
+		color: #3f4164;
+		font-weight: 600;
+		font-size: 1.1em;
+	}
+
+	.navbar-header-content.menu-active > div{
+		display: block;
+	}
+
 	.navbar-header-container {
 		display: grid;
-		grid-template-columns: 50% 50%;
-		align-items: center;
+		grid-template-columns: repeat(2, 1fr);
 	}
+
+	.navbar-header-content{
+		grid-column-start: 1;
+		grid-column-end: 3;
+	}
+
+	.navbar-header-content .nav-item{
+		display: block;	
+	}
+
+	.navbar-header-content .dropdown .dropdown-icon img{
+		content: url(../assets/icon-arrow-dark.svg);
+	}
+	
+
+	.navbar-header-content .dropdown .dropdown-content {
+		display: none;
+		position: relative;
+		top: 0px;
+		left: 50%;
+		transform: translate(-50%);
+		padding: 10px;
+		background: #ccc;	
+	}
+
 }
 </style>
